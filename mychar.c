@@ -7,9 +7,10 @@
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
 #include <asm/uaccess.h>
-#define MAJOR_NUMBER 61
 
+#define MAJOR_NUMBER 61
 /* forward declaration */
+
 int onebyte_open(struct inode *inode, struct file *filep);
 int onebyte_release(struct inode *inode, struct file *filep);
 ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos);
@@ -36,10 +37,20 @@ int onebyte_release(struct inode *inode, struct file *filep) {
 
 ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) {
 	/*please complete the function on your own*/
+	int bytes_read = 0;
+	put_user(*(onebyte_data), buf);
+
+	bytes_read ++;
+	return bytes_read;
 }
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos) {
 	/*please complete the function on your own*/
+	int bytes_write = 0;
+	get_user(*(onebyte_data), buf);
+
+	bytes_write ++;
+	return bytes_write;
 }
 
 static int onebyte_init(void) {
