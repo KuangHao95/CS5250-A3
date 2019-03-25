@@ -92,7 +92,8 @@ static void onebyte_exit(void) {
 		 onebyte_data = NULL;
 	}
 	// unregister the device
-	unregister_chrdev(MAJOR_NUMBER, "onebyte");
+	// unregister_chrdev(MAJOR_NUMBER, "onebyte");
+	unregister_chrdev(MAJOR_NUMBER, DEVICE_NAME);
 	printk(KERN_ALERT "Onebyte device module is unloaded\n");
 }
 
