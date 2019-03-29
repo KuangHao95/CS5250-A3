@@ -58,9 +58,9 @@ ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t 
 
 	if(count > sizeof(char)) {
 		printk(KERN_ALERT "No space left on device\n");
-		return -EINVAL;
+		return -ENOSPC;
 	}
-	
+
 	bytes_write ++;
 	return bytes_write;
 }
@@ -68,8 +68,7 @@ ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t 
 static int onebyte_init(void) {
 	int result;
 	// register the device
-	result = register_chrdev(MAJOR_NUMBER, "onebyte",
-	&onebyte_fops);
+	result = register_chrdev(MAJOR_NUMBER, "onebyte", &onebyte_fops);
 	if (result < 0) {
 		return result;
 	}
@@ -78,11 +77,11 @@ static int onebyte_init(void) {
 	// the type of memory to be allocated.
 	// To release the memory allocated by kmalloc, use kfree.
 	onebyte_data = kmalloc(sizeof(char), GFP_KERNEL);
+	
 	if (!onebyte_data) {
 		onebyte_exit();
 		// cannot allocate memory
-		// return no memory error, negative signify a
-		failure
+		// return no memory error, negative signify a failure
 		return -ENOMEM;
 	}
 	// initialize the value to be X
