@@ -44,6 +44,7 @@ ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 		return 0;	
 	}
 	put_user(*(onebyte_data), buf);
+	copy_to_user(buf, onebyte_data, sizeof(char));
 
 	bytes_read ++;
 	return bytes_read;
@@ -53,6 +54,7 @@ ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t 
 	/*please complete the function on your own*/
 	int bytes_write = 0;
 	get_user(*(onebyte_data), buf);
+	copy_from_user(onebyte_data, buf, sizeof(char));
 
 	bytes_write ++;
 	return bytes_write;
@@ -92,8 +94,7 @@ static void onebyte_exit(void) {
 		 onebyte_data = NULL;
 	}
 	// unregister the device
-	// unregister_chrdev(MAJOR_NUMBER, "onebyte");
-	unregister_chrdev(MAJOR_NUMBER, DEVICE_NAME);
+	unregister_chrdev(MAJOR_NUMBER, "onebyte");
 	printk(KERN_ALERT "Onebyte device module is unloaded\n");
 }
 
