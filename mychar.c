@@ -27,6 +27,7 @@ struct file_operations onebyte_fops = {
 };
 
 char *onebyte_data = NULL;
+
 int onebyte_open(struct inode *inode, struct file *filep) {
 	return 0; // always successful
 }
@@ -37,32 +38,31 @@ int onebyte_release(struct inode *inode, struct file *filep) {
 
 ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) {
 	/*please complete the function on your own*/
-	int bytes_read = 0;
+	int byte2read = 0;
 
-	/* Check buffer written status */
 	if(*buf != 0) {
 		return 0;	
 	}
-	//put_user(*(onebyte_data), buf);
+
 	copy_to_user(buf, onebyte_data, sizeof(char));
 
-	bytes_read ++;
-	return bytes_read;
+	byte2read ++;
+	return byte2read;
 }
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos) {
 	/*please complete the function on your own*/
-	int bytes_write = 0;
-	//get_user(*(onebyte_data), buf);
+	int byte2write = 0;
+
 	copy_from_user(onebyte_data, buf, sizeof(char));
 
 	if(count > sizeof(char)) {
-		printk(KERN_ALERT "No space left on device\n");
+		printk(KERN_ALERT "NO MORE SPACE!\n");
 		return -ENOSPC;
 	}
 
-	bytes_write ++;
-	return bytes_write;
+	byte2write ++;
+	return byte2write;
 }
 
 static int onebyte_init(void) {
